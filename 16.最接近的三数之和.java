@@ -8,52 +8,24 @@ import java.util.Arrays;
 
 // @lc code=start
 class Solution {
-    int ans = Integer.MAX_VALUE;
-    int target;
-    int[] nums;
+    int n = 0;
 
     public int threeSumClosest(int[] nums, int target) {
-        this.target = target;
-        this.nums = nums;
+        int ret = 0x3fffffff;
+        n = nums.length;
         Arrays.sort(nums);
-        for (int i = 0; i < nums.length; ++i) {
-            for (int j = i + 1; j < nums.length; ++j) {
-                int tar = target - (nums[i] + nums[j]);
-                int index = Arrays.binarySearch(nums, tar);
-                if (index >= 0) {
-                    index = Arrays.binarySearch(nums, tar + 1);
-                    if(index >= 0) updateNear(nums[i] + nums[j] + nums[index]);
-                    else useNearIndex(nums[i] + nums[j], index);
-
-                    index = Arrays.binarySearch(nums, tar - 1);
-                    if(index >= 0) updateNear(nums[i] + nums[j] + nums[index]);
-                    else useNearIndex(nums[i] + nums[j], index);
-
-                } else {
-                    useNearIndex(nums[i] + nums[j], index);
+        for(int i = 0;i < n - 2;++i){
+            int j = i + 1, k = n - 1;
+            while(j < k){
+                if(Math.abs(nums[i] + nums[j] + nums[k] - target) < Math.abs(ret - target)){
+                    ret = nums[i] + nums[j] + nums[k];
                 }
-            }
+                if(nums[i] + nums[j] + nums[k] >= target) --k;
+                else ++j;
+            } 
         }
-        return ans;
+        return ret;
     }
 
-    private void useNearIndex(int base, int index) {
-        int biggerIndex = -(index + 1);
-        int smallerIndex = biggerIndex - 1;
-
-        if (biggerIndex > 0 && biggerIndex < nums.length) {
-            updateNear(base + nums[biggerIndex]);
-        }
-        if (smallerIndex > 0 && smallerIndex < nums.length) {
-            updateNear(base + nums[smallerIndex]);
-        }
-    }
-
-    private void updateNear(int val) {
-        if (Math.abs(ans - target) < Math.abs(val - target)) {
-            if (val != target)
-                ans = val;
-        }
-    }
 }
 // @lc code=end
