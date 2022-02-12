@@ -18,7 +18,7 @@ class Solution {
     StringBuilder cur = new StringBuilder();
     int toRemoveLeft = 0;
     int toRemoveRight = 0;
-    //char target = '(';
+    
     int n;
     public List<String> removeInvalidParentheses(String s) {
         n = s.length();
@@ -50,13 +50,13 @@ class Solution {
         //System.out.println("toRemove:"+toRemove);
         //System.out.println(cur.toString());
         dfs(0);
-        System.out.println(times);
+        
         if(ans.isEmpty()) return Arrays.asList(new String());
         return new LinkedList<>(ans);
     }
 
     private void dfs(int index){
-        ++times;
+        
         if(toRemoveLeft == 0 && toRemoveRight == 0){
             //System.out.println("final");
             String temp = cur.toString();
