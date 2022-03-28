@@ -43,7 +43,7 @@ class Solution {
                 }
             } else {
                 if (headA.val < headB.val) {
-                    toBeAdded = headA;
+                    toBeAdded = headA;`
                     headA = headA.next;
                 } else {
                     toBeAdded = headB;
@@ -56,7 +56,7 @@ class Solution {
                 mergedListTrailPre = mergedList;
                 continue;
             }
-            
+
             mergedListTrailPre.next = new ListNode(toBeAdded.val);
             mergedListTrailPre = mergedListTrailPre.next;
         }
