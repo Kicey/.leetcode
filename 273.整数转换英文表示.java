@@ -35,17 +35,18 @@ class Solution {
         map.put(18, "Eighteen");
         map.put(19, "Nineteen");
         map.put(20, "Twenty");
-        map.put(30, );
-        map.put(40, );
-        map.put(50, );
-        map.put(60, );
-        map.put(70, );
-        map.put(80, );
-        map.put(90, );
+        map.put(30, "Thirty");
+        map.put(40, "Foty");
+        map.put(50, "Fifty");
+        map.put(60, "Sixty");
+        map.put(70, "Seventy");
+        map.put(80, "Eighty");
+        map.put(90, "Ninety");
     }
+    String[] units = new String[]{"Billion", "Million", "Thousand", ""};
     public String numberToWords(int num) {
         if(num == 0){
-            return "zero";
+            return "Zero";
         }
         while(num > 0){
             stack.add(num % 1000);
@@ -58,23 +59,38 @@ class Solution {
             if(curNum / 100 != 0){
                 stringBuilder.append(map.get(curNum / 100)).append(' ').append("Hundred");
             }
-            if(curNum % 100 / 10 != 0){
+            if(curNum % 100 / 10 == 0){
+                if(curNum % 10 != 0){
+                    if(stringBuilder.length() != 0){
+                        stringBuilder.append(' ');
+                        stringBuilder.append(map.get(curNum % 10));
+                    }
+                }
+            } else if (curNum % 100 / 10 == 1){
                 if(stringBuilder.length() != 0){
                     stringBuilder.append(' ');
+                    stringBuilder.append(map.get(curNum % 100));
                 }
-                stringBuilder.append(curNum % 100 / 10 * 10);
-            }
-            if(curNum % 10 != 0){
-                if(stringBuilder.length() != 0){
+            } else {
+                 if(stringBuilder.length() != 0){
                     stringBuilder.append(' ');
-                }
-                stringBuilder.append(curNum % 10);
+                    stringBuilder.append(map.get(curNum % 100 / 10 * 10));
+                 }
+                 if(curNum % 10 != 0){
+                    stringBuilder.append(' ');
+                    stringBuilder.append(map.get(curNum % 10));
+                 }
             }
             ans.add(stringBuilder.toString());
         }
-        for(int i = 0;i < ans;++i){
-
+        StringBuilder finalAns = new StringBuilder();
+        int curUnit = 4 - ans.size();
+        finalAns.append(ans.get(0));
+        for(int i = 1;i < ans.size();++i){
+            finalAns.append(' ');
+            finalAns.append(units[curUnit++]);
         }
+        return finalAns.toString();
     }
 }
 // @lc code=end
