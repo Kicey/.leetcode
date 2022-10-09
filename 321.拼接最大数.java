@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
 
 /*
@@ -13,7 +11,10 @@ import java.util.Stack;
 class Solution {
     public int[] maxNumber(int[] nums1, int[] nums2, int k) {
         int[] ans = null;
-        for(int i = 0;i <= k;++i){
+        for(int i = 0;i <= nums1.length;++i){
+            if(k - i > nums2.length || k - i < 0) {
+                continue;
+            }
             int[] subSeq1 = maxSequence(nums1, i);
             int[] subSeq2 = maxSequence(nums2, k - i);
             int[] merged = maxMerge(subSeq1, subSeq2);
@@ -28,75 +29,76 @@ class Solution {
         return ans;
     }
 
+    /**
+     * 返回长度为 {@param size} 的最大数
+     * @param nums
+     * @param size
+     * @return
+     */
     private int[] maxSequence(int[] nums, int size){
         int n = nums.length;
         int ableToDelete = n - size;
         Stack<Integer> stack = new Stack<>();
+        // 单调栈处理
         for(int i = 0;i < n;++i){
             int num = nums[i];
             while(!stack.isEmpty() && stack.peek() < num && ableToDelete > 0){
                 stack.pop();
                 --ableToDelete;
             }
-            stack.add(num);
+            if(stack.size() < size) stack.add(num);
+            else --ableToDelete;
         }
+        // if(size == 1) System.out.printf("size: %s\n", stack.size());
         int[] ret = new int[size];
-        for(int i = size -1;i >= 0;--i){
+        // System.out.printf("array: %s, size: %d, stack.size: %d\n", Arrays.toString(nums), size, stack.size());
+        for(int i = size - 1;i >= 0;--i){
             ret[i] = stack.pop();
         }
         return ret;
     }
 
-    private int[] maxMerge(int[] nums1, int[] nums2){
-        List<int[]> cntList1 = cntList(nums1);
-        List<int[]> cntList2 = cntList(nums2);
-        int[] merged = new int[nums1.length + nums2.length];
+    // 将两个数组合并
+    private int[] maxMerge(int[] numsa, int[] numsb){
+        int lena = numsa.length, lenb = numsb.length;
+        int[] merged = new int[lena + lenb];
         int mergedIndex = 0;
-        int i0 = 0, i1 = 0;
-        while(i0 < cntList1.size() || i1 < cntList2.size()){
-            if(i0 == cntList1.size()){
-                merged[mergedIndex++] = cntList2.get(i1)[0];
-                i1 = nextIndex(cntList2, i1);
-                continue;
+        int ia = 0, ib = 0;
+        while(ia < lena && ib < lenb){
+            int compareRet = compare(numsa, ia, numsb, ib);
+            int added = 0;
+            if(compareRet >= 0){
+                added = numsa[ia++];
+            } else {
+                added = numsb[ib++];
             }
-            if(i1 == cntList2.size()){
-                merged[mergedIndex++] = cntList1.get(i0)[0];
-                i0 = nextIndex(cntList2, i0);
-                continue;
-            }
-            if(cntList1.get(i0)[0] < cntList2.get(i1)[0]){
-                merged[mergedIndex++] = cntList2.get(i1)[0];
-                i1 = nextIndex(cntList2, i1);
-            }
-            if(cntList1.get(i0)[0] > cntList2.get(i1)[0]){
-                merged[mergedIndex++] = cntList1.get(i0)[0];
-                i0 = nextIndex(cntList1, i0);
-            }
-            
+            merged[mergedIndex++] = added;
         }
+        for(;ia < lena;){
+            merged[mergedIndex++] = numsa[ia++];
+        }
+        for(;ib < lenb;){
+            merged[mergedIndex++] = numsb[ib++];
+        }
+        // System.out.println(Arrays.toString(numsa));
+        // System.out.println(Arrays.toString(numsb));
         return merged;
     }
 
-    private int nextIndex(List<int[]> list, int index){
-        --list.get(index)[1];
-        if(list.get(index)[1] == 0){
-            return index + 1;
-        }
-        return index;
-    }
-
-    private List<int[]> cntList(int[] nums){
-        int n = nums.length;
-        List<int[]> cntList = new ArrayList<>();
-        for(int i = 0;i < n;++i){
-            int num = nums[i];
-            if(cntList.isEmpty() || cntList.get(cntList.size() - 1)[0] != num){
-                cntList.add(new int[]{num, 1});
-            } else {
-                cntList.get(cntList.size() - 1)[1]++;
+    private int compare(int[] a, int ia, int[] b, int ib){
+        int lena = a.length, lenb = b.length;
+        for(;ia < lena && ib < lenb;++ia, ++ib){
+            if(a[ia] != b[ib]){
+                return a[ia] - b[ib];
             }
         }
-        return cntList;
+        if(ia != lena && ib == lenb){
+            return 1;
+        }
+        if(ib != lenb && ia == lena){
+            return -1;
+        }
+        return 0;
     }
 }
 // @lc code=end
