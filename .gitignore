@@ -3,3 +3,5 @@
 /.vscode
 /solution
 /周赛
+/.metals
+/.scala-build
