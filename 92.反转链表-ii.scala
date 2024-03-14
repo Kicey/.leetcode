@@ -12,24 +12,27 @@ class ListNode(_x: Int = 0, _next: ListNode = null) {
   var x: Int = _x
 }
 
-object Solution {
-    def reverseBetween(head: ListNode, left: Int, right: Int): ListNode = {
-        val iter = new Iterator[ListNode]() {
-            val (sentinalHead, sentinalTail) = (new ListNode(), new ListNode())
-            sentinalHead.next = head
-            var cur = head
-            def hasNext: Boolean = cur != null
-            def next(): ListNode = {
-                val ret = cur
-                cur = cur.next
-                ret
-            }
-        }
-        val nodeArr = iter.toArray ++ Array[ListNode](sentinalTail)
+object Solution:
+    def reverseBetween(head: ListNode, left: Int, right: Int): ListNode =
+        var res = head
+        var beforeLeft, behindRight:ListNode = null
+        var leftNode, rightNode: ListNode = null
+        var previous, current: ListNode = null
+        current = head
         
-        node
-
-    }
-}
+        for i <- 1 to right do
+            var origin = current
+            current = current.next
+            if i == left - 1 then beforeLeft = origin
+            if i == left then leftNode = origin
+            if i > left then origin.next = previous
+            previous = origin
+            
+        rightNode = previous
+        if beforeLeft == null then res = rightNode
+        else beforeLeft.next = rightNode
+        behindRight = current
+        leftNode.next = behindRight
+        res
 // @lc code=end
 
