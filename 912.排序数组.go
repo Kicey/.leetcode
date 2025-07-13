@@ -7,6 +7,8 @@
 // @lc code=start
 package main
 
+import "math/rand/v2"
+
 type stack struct {
 	start, end int
 }
@@ -22,6 +24,8 @@ func sortArray(nums []int) []int {
 		if curStack.end-curStack.start == 1 {
 			continue
 		}
+		random := rand.IntN(curStack.end-curStack.start) + curStack.start
+		nums[random], nums[curStack.end-1] = nums[curStack.end-1], nums[random]
 		mv := nums[curStack.end-1]
 		le, ri := curStack.start, curStack.end-1
 		for le < ri {
